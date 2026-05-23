@@ -88,14 +88,50 @@ python ablation_study/generate_ablation.py \
 
 ## Baseline Comparison
 
-The baseline scripts depend on [MarkLLM](https://github.com/THU-BPM/MarkLLM). Set the `MARKLLM_ROOT` environment variable first:
+The baseline scripts depend on [MarkLLM](https://github.com/THU-BPM/MarkLLM). Clone it and set the `MARKLLM_ROOT` environment variable first:
 
 ```bash
+git clone https://github.com/THU-BPM/MarkLLM.git /path/to/MarkLLM
 export MARKLLM_ROOT=/path/to/MarkLLM
-
-python baseline/baseline_kgw.py   # KGW watermark baseline
-python baseline/baseline_no_wm.py # No-watermark baseline
 ```
+
+### Generate watermarked text (multiple algorithms)
+
+`baseline_kgw.py` supports any MarkLLM algorithm via `BASELINE_ALGORITHM`:
+
+```bash
+# KGW (default)
+export BASELINE_ALGORITHM=KGW
+export SAVE_PATH=output_kgw.jsonl
+python baseline/baseline_kgw.py
+
+# Unigram
+export BASELINE_ALGORITHM=Unigram
+export SAVE_PATH=output_unigram.jsonl
+python baseline/baseline_kgw.py
+
+# SWEET / EWD / UPV etc.
+export BASELINE_ALGORITHM=SWEET
+export SAVE_PATH=output_sweet.jsonl
+python baseline/baseline_kgw.py
+```
+
+### Generate text without watermark
+
+```bash
+python baseline/baseline_no_wm.py   # No-watermark baseline (no MarkLLM needed)
+```
+
+### Detect watermarks in attacked outputs
+
+```bash
+export BASELINE_ALGORITHM=KGW       # or Unigram, SWEET, etc.
+export INPUT_JSONL=attacked.jsonl
+export OUTPUT_JSONL=attacked_detect.jsonl
+python baseline/baseline_attack_detect.py
+```
+
+All baseline scripts use environment variables for configuration (see source for full list).
 
 ## Dataset
 
